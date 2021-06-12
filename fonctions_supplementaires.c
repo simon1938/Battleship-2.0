@@ -12,7 +12,6 @@
 #include<string.h>
 #include<ctype.h>
 #include <strings.h>
-#include "inventaire.h"
 
 /** fonction qui affiche le menus du jeu et demande a l'utilisateur de choisir le niveau de difficulté
  * @return b le choix de level
@@ -60,8 +59,7 @@ char debut_partie_choixlevel() {
             case 'D' :
                 
                 fflush(stdin);
-
-                printf("\n");
+                
                 printf("Choississez le niveau de difficulte :\n");
                 printf("Facile (F)\n");
                 printf("Moyen (M)\n");
@@ -128,8 +126,7 @@ char demande(){
 //la bloucle se termine lorsque valide ne change pas de valeur, un mauvais choix d'action modifie la valeur de valide et l'ammene a 0
     
     do {
-        printf("\n");
-        printf("Que voulez vous faire  ?\n Sauvegarder et quitter : S\n Jouer : J\n ");
+        printf("que voulez vous faire  ?\n Sauvegarder et quitter : S\n Jouer : J\n ");
         fflush(stdin);
         scanf("%c", &rep);
         
@@ -150,24 +147,28 @@ char demande(){
 
 }
 
-void condition(int* completion, int * invvide, inventaire NB_missile, boat Bateaux2, boat Bateaux3_1, boat Bateaux3, boat Bateaux4, boat Bateaux5){
-
-    if(Bateaux5.vie==0 && Bateaux4.vie==0 && Bateaux3_1.vie==0 && Bateaux3.vie==0 && Bateaux2.vie==0){
-        *completion=1;
-        printf("Vous avez coule tout les Bateaux\n");
-        printf("Vous avez gagne felicitations\n");
-    }
-
-    if(NB_missile.artillerie==0 && NB_missile.tactique==0 && NB_missile.simple==0 && NB_missile.bombe==0){
-
-        *invvide=1;
-        if(*completion!=1){
-            printf("Vous n'avez plus de missile et n'avez pas coule tout les Bateaux\n");
-            printf("Vous avez perdu\n");
+void afficher_bateaux_battleship(){
 
 
-        }
-    }
+    printf(" _           _   _   _           _     _       \n"
+           "| |         | | | | | |         | |   (_)      \n"
+           "| |__   __ _| |_| |_| | ___  ___| |__  _ _ __  \n"
+           "| '_ \\ / _` | __| __| |/ _ \\/ __| '_ \\| | '_ \\ \n"
+           "| |_) | (_| | |_| |_| |  __/\\__ \\ | | | | |_) |\n"
+           "|_.__/ \\__,_|\\__|\\__|_|\\___||___/_| |_|_| .__/ \n"
+           "                                        | |    \n"
+           "                                        |_|    ");
 
 
+    printf("# #  ( )\n"
+           "                                  ___#_#___|__\n"
+           "                              _  |____________|  _\n"
+           "                       _=====| | |            | | |==== _\n"
+           "                 =====| |.---------------------------. | |====\n"
+           "   <--------------------'   .  .  .  .  .  .  .  .   '--------------/\n"
+           "     \\                                                             /\n"
+           "      \\_______________________________________________WWS_________/\n"
+           "  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+           "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\n"
+           "   wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww ");
 }
