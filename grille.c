@@ -37,7 +37,7 @@ void initgrille(char grille[10][10], char tableau[10][10]) {
 void regles(){
 
     //affiche les regles et le nombre de bateaux en debut de partie
-
+    printf("\n");
     printf("Le but est de coule les bateaux dissimules dans la grille\n");
     printf("Notre adversaire possede 5 bateaux:\n");
     printf(" - un de taille 5\n - un de taille 4\n - deux de taille 3\n - un de taille 2\n");
@@ -101,10 +101,10 @@ void grilleutilisateur(char grille[10][10]){
 
 }
 
-void affichecoup(char tableau[10][10], char grille[10][10], int visible, int nbimpact, boat* Bateaux2,boat* Bateaux3_1,boat* Bateaux3,boat* Bateaux4,boat* Bateaux5){
+void affichecoup(char tableau[10][10], char grille[10][10], int visible, int* nbimpact, boat* Bateaux2,boat* Bateaux3_1,boat* Bateaux3,boat* Bateaux4,boat* Bateaux5){
 
     
-    //c'est cette variable qui gere l'affichage des grilles apres chaque coup ainsi que le nombre de bateaux touchés et les bateaux coulés 
+    //c'est cette fonction qui gere l'affichage des grilles apres chaque coup ainsi que le nombre de bateaux touchés et les bateaux coulés
     // dans le cas de l'artillerie qui passe deux fois sur la meme case, la case sur laquelle on repasse deux fois ne modifie la valeur de nbimpact qu'une seule fois
     
     if(visible==0){
@@ -112,11 +112,11 @@ void affichecoup(char tableau[10][10], char grille[10][10], int visible, int nbi
         affiche_grille(grille);
     }
 
-    printf("vous avez touche des bateaux %d fois\n", nbimpact);
+    printf("vous avez touche des bateaux %d fois\n", *nbimpact);
 
 
     if(Bateaux2->taille==0){
-        printf("Yohoho Bateau de taille 2 coule\n");
+        printf("Bateau de taille 2 coule\n");
         Bateaux2->taille=2;
     }
 
@@ -139,5 +139,9 @@ void affichecoup(char tableau[10][10], char grille[10][10], int visible, int nbi
         printf("Bateau de taille 5 coule\n");
         Bateaux5->taille=5;
     }
+
+
+    *nbimpact=0;
+
 }
 

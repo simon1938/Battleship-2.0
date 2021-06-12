@@ -12,7 +12,7 @@ int main() {
 
     int colonne;
     int ligne;
-int nbimpact;
+int nbimpact=0;
 
     int min1, min2;
     int max1, max2;
@@ -45,7 +45,7 @@ int invvide=0;
 // faire une fonction affichage pour chaque fin de programme
 
 
-    afficher_bateaux_battleship();
+
 
 
     //affiche menu princial+choix sur modes//
@@ -59,8 +59,6 @@ int invvide=0;
     } else if(level=='F' || level=='M'|| level=='D'){
 
 
-
-
         // initialise les deux grille avec des ______
         initgrille(grille, tableau);
 
@@ -68,7 +66,6 @@ int invvide=0;
         //genere les bateaux dans la grille
 
         genere_bateau(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
-        affiche_grille(grille);
         /*
         printf("voici un petit test\n");
         deplacement_bateaux(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
@@ -77,139 +74,111 @@ int invvide=0;
         mode=debut_partie_choixmode();
 
 
+        //initialise le nb de munitions en fonction de ce qu'a choisit l'utilisateur
+
         munitions(level, &NB_missile );
 
     } else if(level=='C'){
 
-
         charger(grille,tableau,&NB_missile,&Bateaux5,&Bateaux4,&Bateaux3,&Bateaux3_1,&Bateaux2, &mode);
-
-
 
     }
 
-
-
-
-    if (mode=='B' || mode=='b'){
+    // modifie les valeurs des variables activant les effets des différents mode de jeu
+    if (mode=='B'){
        visible=1;
     }
 
 
-
-
-    if (mode=='A' || mode=='a'){
+    if (mode=='A'){
         active=1;
     }
 
 
-
-
-
-    //affiche la grillevierge
+    //affiche la grille vierge et les regles en début de partie
     grilleutilisateur(tableau);
     regles();
 
 
-
-
-
-    //affiche grille avec bateaux
+    //affiche grille avec les bateaux, pratique pour vérifier que le code marche
     affiche_grille(grille);
 
 
 
-    //initialise le nb de munitions en fonction de ce qu'a choisit l'utilisateur
-
 
     do {
-        printf("======Bateaux restants======\nBateaux taille(5), Vie=%d\nBateaux taille(4), Vie=%d\nBateaux taille (3), Vie=%d\n2emeBateaux taille(3), Vie=%d\nBateaux taille (2), Vie=%d\n\n\n",Bateaux5.vie,Bateaux4.vie,Bateaux3.vie,Bateaux3_1.vie,Bateaux2.vie);
 
+        //demande l'action à faire et la retourne pour que la varialbe action prenne le charactere retourné par la fonction
         action=demande();
         if(action=='J'){
 
+            //demande type de missile et le retourne, type_missile prend le charactere retourné par la fonction
+
             type_missile=choix_type_missile(&NB_missile, tableau, grille, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5, visible);
+
+            //verifie que les coordonnees rentrees sont comprises entre 0 et 9, modifie directement la valeur de ligne et colonne
+
             verif(tableau, grille, &ligne, &colonne);
 
 
             if (type_missile == 'C' && NB_missile.simple != 0) {
 
+            //fonction de missile classqiue
+
                 impact(tableau, grille, ligne, colonne, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
-                //affichage
 
-                affichecoup(tableau, grille, visible, nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
+            //affiche les deux grilles et le nombre de bateau touchés ainsi que le message d'annonce si
+            //un bateau à été coulé
 
-                nbimpact=0;
+                affichecoup(tableau, grille, visible, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
+
+
 
             } else if (type_missile == 'B' && NB_missile.bombe != 0) {
 
+            //fonction de missile bombe
 
-                bombe(tableau, grille, ligne, colonne, &min1, &min2, &max1, &max2);
+                bombe(tableau, grille, ligne, colonne, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
 
-                for (int k = min1; k <= max1; ++k) {
-                    for (int l = min2; l <= max2; ++l) {
 
-                        impact(tableau, grille, l, k, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
-                    }
-                }
+                affichecoup(tableau, grille, visible, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
 
-                affichecoup(tableau, grille, visible, nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
 
-                nbimpact=0;
-                printf("voici un petit test\n");
+
 
 
 
             } else if (type_missile == 'A' && NB_missile.artillerie != 0) {
 
+            //fonction de missile artillerie
 
-                for (int i = 0; i < 10; ++i) {
-                    impact(tableau, grille, i, colonne, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
-                }
+                impact_artillerie(tableau, grille, ligne, colonne, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
 
-                //applique impact sur toutes les colonnes de la croix
+                affichecoup(tableau, grille, visible, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
 
-                for (int i = 0; i < 10; ++i) {
-                    impact(tableau, grille, ligne, i, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
-                }
 
-                affichecoup(tableau, grille, visible, nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
-
-                nbimpact=0;
 
             } else if (type_missile == 'T' && NB_missile.tactique != 0) {
 
+            // fonction de missile tactique
+
                 impacttact(tableau, grille, ligne, colonne, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
-                affichecoup(tableau, grille, visible, nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
+
+                affichecoup(tableau, grille, visible, &nbimpact, &Bateaux2, &Bateaux3_1, &Bateaux3, &Bateaux4, &Bateaux5);
 
             }
 
            if(active==1){
-               if(Bateaux5.vie==0 && Bateaux4.vie==0 && Bateaux3_1.vie==0 && Bateaux3.vie==0 && Bateaux2.vie==0){
-                       }else{
-                   deplacement_bateaux(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
-               }
-           }
-
-            affiche_grille(grille);
-            if(Bateaux5.vie==0 && Bateaux4.vie==0 && Bateaux3_1.vie==0 && Bateaux3.vie==0 && Bateaux2.vie==0){
-                completion=1;
-                printf("Vous avez coule tout les Bateaux\n");
-                printf("Vous avez gagne felicitations\n");
-            }
-
-            if(NB_missile.artillerie==0 && NB_missile.tactique==0 && NB_missile.simple==0 && NB_missile.bombe==0){
-
-                invvide=1;
-                if(completion!=1){
-                    printf("vous n'avez plus de missile et n'avez pas coule tout les Bateaux\n");
-                    printf("vous avez perdu\n");
-
-                    //demander si il veut faire une nouvelle partie ou quitter
-                }
-            }
+                        deplacement_bateaux(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
+                       }
+            //on met les fonctions affiche grille (contenant les positions des bateaux) en commentaire afin de pouvoir
+            //rapidement les remttre en place lorsque l'on veut s'assurer du bon fonctionnement du programme
+            //affiche_grille(grille);
 
 
+            // vérifie si les conditions pour une victoire ou une défaite sont remplies
+
+            condition(&completion, &invvide, NB_missile, Bateaux2,Bateaux3_1,Bateaux3,Bateaux4,Bateaux5 );
 
 
 
@@ -217,7 +186,8 @@ int invvide=0;
 
 
             enregistrer(tableau,grille,&NB_missile,&Bateaux5,&Bateaux4,&Bateaux3,&Bateaux3_1,&Bateaux2, &mode);
-            affiche_grille(grille);
+           // affiche_grille(grille);
+            printf("\n");
             printf("Fin du programme");
             return 0;
         }

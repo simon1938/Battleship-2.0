@@ -26,15 +26,11 @@ char choix_type_missile(inventaire *NB_missile, char tableau[10][10], char grill
 
 
 
-
-    int ligne, colonne;
-    int nbimpact=0;
-   
    // on a prefere afficher le nombre d'exemplaires de chaque missile pour eviter que l'utilsateur essaye d'un tirer un et de recommencer 
    // à essayer de le tirer en pensant que c'est le nom du missile rentré qui pose probleme
    // Cela lui permet aussi d'eviter d'essayer de tirer un missile pour se rendre compte qu'il n'a plus aucun exemplaire de celui ci
-
-    printf("quel type de missile voulez vous choisir\nC : classique - %d exemplaires \nB: bombe - %d exemplaires \nA: artillerie - %d exemplaires \nT: tactique - %d exemplaires \n", NB_missile->simple, NB_missile->bombe, NB_missile->artillerie, NB_missile->tactique);
+    printf("\n");
+    printf("Quel type de missile voulez vous choisir\nC : classique - %d exemplaires \nB: bombe - %d exemplaires \nA: artillerie - %d exemplaires \nT: tactique - %d exemplaires \n", NB_missile->simple, NB_missile->bombe, NB_missile->artillerie, NB_missile->tactique);
 
 
    
@@ -47,7 +43,8 @@ char choix_type_missile(inventaire *NB_missile, char tableau[10][10], char grill
         valide=0;
         fflush(stdin);
         scanf("%c", &type_missile);
-        type_missile=(type_missile);
+
+        type_missile= toupper(type_missile);
 
        //Pour eviter les problemes, on ne diminue le nombre de missile que si celui ci est strictement supérieur à 0
        
@@ -104,10 +101,12 @@ void verif(char tableau[10][10], char grille[10][10], int* ligne, int* colonne) 
    
     do {
         if (codeerreur == 1) {
-            printf("erreur, les coordonnes rentrees ne sont pas valide\n");
+            printf("Erreur, les coordonnes rentrees ne sont pas valide\n");
+            printf("\n");
         }
         codeerreur = 0;
-        printf("veuillez rentrer les coordonnes souhaitees : \n");
+        printf("\n");
+        printf("Veuillez rentrer les coordonnes souhaitees : \n");
        
        // on fait un fflsuh pour s'assurer de ne pas rencontrer de problemes avec les scanfs
        
@@ -209,49 +208,259 @@ void impact(char tableau[10][10], char grille[10][10], int ligne, int colonne, i
 }
 
 
-void bombe(char tableau[10][10], char grille[10][10], int ligne, int colonne, int* min1, int* min2, int* max1, int* max2){
+void bombe(char tableau[10][10], char grille[10][10], int ligne, int colonne, int * nbimpact, boat *Bateaux2,boat *Bateaux3_1,boat *Bateaux3,boat *Bateaux4,boat *Bateaux5){
 
 
-
+int min1, min2;
+int max1, max2;
 // Les lignes suivantes vont restreindre la zone d'action de la fonction ipmpact afin qu'elle n'essaye pas d'atteindre des cases en dehors de la grille
 
     if (colonne==0){
-        *min1 = 0;
+        min1 = 0;
     } else {
-        *min1= colonne -1;
+        min1= colonne -1;
     }
 
     if (ligne==0){
-        *min2=0;
+        min2=0;
     } else {
-        *min2=ligne-1;
+        min2=ligne-1;
     }
 
     if (colonne==9){
-        *max1=9;
+        max1=9;
     } else{
-        *max1=colonne+1;
+        max1=colonne+1;
     }
 
     if (ligne==9){
-        *max2=9;
+        max2=9;
     } else{
-        *max2=ligne+1;
+        max2=ligne+1;
+    }
+
+
+    for (int k = min1; k <= max1; ++k) {
+        for (int l = min2; l <= max2; ++l) {
+
+            if (grille[k][l] != '_' && tableau[k][l] != 'X' && tableau[k][l] != 'O') {
+                tableau[k][l] = 'X';
+                // on modifie la valeur de la variable nbimpact pour que la fonction affichage appelee apres chaque tir puisse afficher le nombre de missile touchés, cette valeur sera
+                // remise a 0 apres coup
+                ++*nbimpact;
+
+
+
+                //la fonction impact n'as un effet que si la case en question possede un bateau et si les points de vie de celui ci ne sont pas nuls
+                //si les points de vie sont nul alors la case contenant le bateau sera consideree comme touchee
+
+                if (grille[k][l] == '5' && Bateaux5->vie!=0 ) {
+                    Bateaux5->vie=Bateaux5->vie-1;
+
+                    if(Bateaux5->vie==0){
+                        Bateaux5->vie--;
+
+                        if(Bateaux5->vie==0){
+
+                            // Passer la taille du bateau a 0 permet a la fonction affichage de se rendre compte que le bateau a ete touche
+                            // cette valeur sera retournee a sa valeur d'origine apres coup
+
+                            Bateaux5->taille=0;
+                        }
+                    }
+
+
+                } else if (grille[k][l] == '4' && Bateaux4->vie != 0) {
+                    Bateaux4->vie--;
+                    if (Bateaux4->vie == 0) {
+                        Bateaux4->taille=0;
+
+                    }
+
+                } else if (grille[k][l] == '2' && Bateaux2->vie != 0) {
+                    Bateaux2->vie--;
+                    if (Bateaux2->vie == 0) {
+                        Bateaux2->taille=0;
+
+                    }
+                } else if(grille[k][l] =='3' && Bateaux3->vie!=0){
+                    Bateaux3->vie--;
+                    if(Bateaux3->vie==0){
+                        Bateaux3->taille=0;
+
+                    }
+                } else if(grille[k][l] =='1' && Bateaux3_1->vie!=0 ){
+                    Bateaux3_1->vie--;
+                    if(Bateaux3_1->vie==0){
+                        Bateaux3_1->taille=0;
+
+                    }
+                }
+
+
+// si la case en question n'as ni de bateaux et n'as pas déjà été touchée auparavant, alors elle prend la valeur 'O'
+
+            } else if (tableau[k][l] != 'X' && tableau[k][l] != 'O') {
+                tableau[k][l] = 'O';
+
+            }
+
+// si la case en question n'as ni de bateaux et n'as pas déjà été touchée auparavant, alors elle prend la valeur 'O'
+
+        }
+
+        }
+
+
+
     }
 
     //on applique impact à toute les cases du perimetre (toutes les cases situee a un bloc du point d'impact renseigne au debut
 
 
+void impact_artillerie(char tableau[10][10], char grille[10][10], int ligne, int colonne, int * nbimpact, boat *Bateaux2,boat *Bateaux3_1,boat *Bateaux3,boat *Bateaux4,boat *Bateaux5){
+
+    for (int i = 0; i < 10; ++i) {
+
+        if (grille[i][ligne] != '_' && tableau[i][ligne] != 'X' && tableau[i][ligne] != 'O') {
+            tableau[i][ligne] = 'X';
+            // on modifie la valeur de la variable nbimpact pour que la fonction affichage appelee apres chaque tir puisse afficher le nombre de missile touchés, cette valeur sera
+            // remise a 0 apres coup
+            ++*nbimpact;
+
+
+
+            //la fonction impact n'as un effet que si la case en question possede un bateau et si les points de vie de celui ci ne sont pas nuls
+            //si les points de vie sont nul alors la case contenant le bateau sera consideree comme touchee
+
+            if (grille[i][ligne] == '5' && Bateaux5->vie!=0 ) {
+                Bateaux5->vie--;
+
+                    if(Bateaux5->vie==0){
+
+                        // Passer la taille du bateau a 0 permet a la fonction affichage de se rendre compte que le bateau a ete touche
+                        // cette valeur sera retournee a sa valeur d'origine apres coup
+
+                        Bateaux5->taille=0;
+                    }
+
+
+            } else if (grille[i][ligne] == '4' && Bateaux4->vie != 0) {
+                Bateaux4->vie--;
+                if (Bateaux4->vie == 0) {
+                    Bateaux4->taille=0;
+
+                }
+
+            } else if (grille[i][ligne] == '2' && Bateaux2->vie != 0) {
+                Bateaux2->vie--;
+                if (Bateaux2->vie == 0) {
+                    Bateaux2->taille=0;
+
+                }
+            } else if(grille[i][ligne] =='3' && Bateaux3->vie!=0){
+                Bateaux3->vie--;
+                if(Bateaux3->vie==0){
+                    Bateaux3->taille=0;
+
+                }
+            } else if(grille[i][ligne] =='1' && Bateaux3_1->vie!=0 ){
+                Bateaux3_1->vie--;
+                if(Bateaux3_1->vie==0){
+                    Bateaux3_1->taille=0;
+
+                }
+            }
+
+
+// si la case en question n'as ni de bateaux et n'as pas déjà été touchée auparavant, alors elle prend la valeur 'O'
+
+        } else if (tableau[i][ligne] != 'X' && tableau[i][ligne] != 'O') {
+            tableau[i][ligne] = 'O';
+
+        }
+
+    }
+
+    //applique impact sur toutes les colonnes de la croix
+
+    for (int i = 0; i < 10; ++i) {
+
+        if (grille[colonne][i] != '_' && tableau[colonne][i] != 'X' && tableau[colonne][i] != 'O') {
+            tableau[colonne][i] = 'X';
+            // on modifie la valeur de la variable nbimpact pour que la fonction affichage appelee apres chaque tir puisse afficher le nombre de missile touchés, cette valeur sera
+            // remise a 0 apres coup
+            ++*nbimpact;
+
+
+            //la fonction impact n'as un effet que si la case en question possede un bateau et si les points de vie de celui ci ne sont pas nuls
+            //si les points de vie sont nul alors la case contenant le bateau sera consideree comme touchee
+
+            if (grille[colonne][i] == '5' && Bateaux5->vie!=0 ) {
+                Bateaux5->vie=Bateaux5->vie-1;
+
+                if(Bateaux5->vie==0){
+                    Bateaux5->taille=0;
+
+                    if(Bateaux5->vie==0){
+
+                        // Passer la taille du bateau a 0 permet a la fonction affichage de se rendre compte que le bateau a ete touche
+                        // cette valeur sera retournee a sa valeur d'origine apres coup
+
+                        Bateaux5->taille=0;
+                    }
+                }
+
+
+            } else if (grille[colonne][i] == '4' && Bateaux4->vie != 0) {
+                Bateaux4->vie--;
+                if (Bateaux4->vie == 0) {
+                    Bateaux4->taille=0;
+
+                }
+
+            } else if (grille[colonne][i] == '2' && Bateaux2->vie != 0) {
+                Bateaux2->vie--;
+                if (Bateaux2->vie == 0) {
+                    Bateaux2->taille=0;
+
+                }
+            } else if(grille[colonne][i] =='3' && Bateaux3->vie!=0){
+                Bateaux3->vie--;
+                if(Bateaux3->vie==0){
+                    Bateaux3->taille=0;
+
+                }
+            } else if(grille[colonne][i] =='1' && Bateaux3_1->vie!=0 ){
+                Bateaux3_1->vie--;
+                if(Bateaux3_1->vie==0){
+                    Bateaux3_1->taille=0;
+
+                }
+            }
+
+
+// si la case en question n'as ni de bateaux et n'as pas déjà été touchée auparavant, alors elle prend la valeur 'O'
+
+        } else if (tableau[colonne][i] != 'X' && tableau[colonne][i] != 'O') {
+            tableau[colonne][i] = 'O';
+
+        }
+
+
+    }
 
 
 }
+
+
 
 
 void impacttact(char tableau[10][10], char grille[10][10], int ligne, int colonne, int * nbimpact, boat *Bateaux2,boat *Bateaux3_1,boat *Bateaux3,boat *Bateaux4,boat *Bateaux5){
 
    // cette fonction gere le comportement du missile tactique
 
-int ligne1, colonne1;
+
 // Impact est la fonction qui gere comment un missile impactera la grille et les points de vie d'un bateau
 
 char bateau;

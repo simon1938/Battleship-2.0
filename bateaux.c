@@ -214,7 +214,7 @@ int verif2 (boat *Bateaux2,boat *Bateaux3_1,boat *Bateaux3,boat *Bateaux4,boat *
     }
 
 }
-
+//active on s'active
 int verification(char grille[10][10],int taille,int x,int y){
     int verif=0;
     int i,j;
@@ -265,6 +265,8 @@ void deplacement_bateaux(char grille[10][10], boat *Bateaux2,boat *Bateaux3_1,bo
     int compteur_fin=0;
 
 
+
+
     do {
 
 
@@ -273,17 +275,18 @@ void deplacement_bateaux(char grille[10][10], boat *Bateaux2,boat *Bateaux3_1,bo
 
 
             compteur_fin++;
-        } while (taille == 1 || taille == 0 || (Bateaux5->vie == 0 && taille == 5) ||
+        } while ((taille == 1 || taille == 0 || (Bateaux5->vie == 0 && taille == 5) ||
                   (Bateaux4->vie == 0 && taille == 4) || (Bateaux3->vie == 0 && taille == 3) ||
-                  (Bateaux3_1->vie == 0 && taille == 3) || (Bateaux2->vie == 0 && taille == 2)
-                 );
+                  (Bateaux3_1->vie == 0 && taille == 3) || (Bateaux2->vie == 0 && taille == 2)) &&
+                 compteur_fin == 10000);
+
+
+
 
 
 
         x = rand() % 10;
         y = rand() % 10;
-
-
         verif = verification(grille, taille, x, y);
     } while (verif == 1);
 
