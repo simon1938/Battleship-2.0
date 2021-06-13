@@ -63,12 +63,12 @@ int invvide=0;
 
         // initialise les deux grille avec des ______
         initgrille(grille, tableau);
-
+        affiche_grille(tableau);
 
         //genere les bateaux dans la grille
 
         genere_bateau(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
-        affiche_grille(grille);
+       // affiche_grille(grille);
         /*
         printf("voici un petit test\n");
         deplacement_bateaux(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
@@ -107,7 +107,7 @@ int invvide=0;
 
 
     //affiche la grillevierge
-    grilleutilisateur(tableau);
+   // grilleutilisateur(tableau);
     regles();
 
 
@@ -115,7 +115,7 @@ int invvide=0;
 
 
     //affiche grille avec bateaux
-    affiche_grille(grille);
+   // affiche_grille(grille);
 
 
 
@@ -188,6 +188,7 @@ int invvide=0;
                if(Bateaux5.vie==0 && Bateaux4.vie==0 && Bateaux3_1.vie==0 && Bateaux3.vie==0 && Bateaux2.vie==0){
                        }else{
                    deplacement_bateaux(grille,&Bateaux2,&Bateaux3_1,&Bateaux3,&Bateaux4,&Bateaux5);
+                   printf("Un bateau c'est deplace...\n");
                }
            }
 

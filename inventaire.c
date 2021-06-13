@@ -15,7 +15,7 @@
  * @param difficulte
  * @return
  */
-int munitions(char difficulte, inventaire* Nb_missile) {
+void munitions(char difficulte, inventaire* Nb_missile) {
 
     if (difficulte == 'F') {
         Nb_missile->artillerie = 10;
@@ -35,5 +35,5 @@ int munitions(char difficulte, inventaire* Nb_missile) {
 
     }
 
-    return Nb_missile;
+
 }
